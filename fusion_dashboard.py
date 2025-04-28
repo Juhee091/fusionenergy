@@ -117,7 +117,8 @@ st.success(f"Predicted Commercialization Year: {predicted_year}")
 
 # Investment strategy recommendation
 st.subheader("Investment Strategy Recommendation")
-if data_filtered['Plasma Temperature (°C)'] > 100_000_000:
+plasma_temp = data_filtered['Plasma Temperature (°C)']
+if pd.notnull(plasma_temp) and plasma_temp > 100_000_000:
     st.info("High Potential: Focus on high-temperature superconducting tokamak technologies.")
 else:
     st.info("Medium Potential: Monitor plasma duration and stability progress.")
