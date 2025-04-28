@@ -1,4 +1,4 @@
-import streamlit as st
+mport streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
@@ -30,18 +30,21 @@ reports = {
 # Prepare machine learning model
 ml_data = data[['Plasma Duration (seconds)', 'Plasma Temperature (°C)', 'Energy Gain']].fillna(0)
 X = ml_data.values
-y = np.array([2038, 2042, 2040, 2035])  # Hypothetical commercialization years
+y = np.array([2038, 2042, 2040, 2035])
 model = LinearRegression()
 model.fit(X, y)
 
 def predict_year(row):
-    features = np.array([[row['Plasma Duration (seconds)'] or 0,
-                          row['Plasma Temperature (°C)'] or 0,
-                          row['Energy Gain'] or 0]])
+    features = np.array([
+        [
+            row['Plasma Duration (seconds)'] if pd.notnull(row['Plasma Duration (seconds)']) else 0,
+            row['Plasma Temperature (°C)'] if pd.notnull(row['Plasma Temperature (°C)']) else 0,
+            row['Energy Gain'] if pd.notnull(row['Energy Gain']) else 0
+        ]
+    ])
     year = model.predict(features)[0]
     return int(round(year))
 
-# Create a styled PDF report with cover page and user name
 class PDF(FPDF):
     def header(self):
         if self.page_no() != 1:
@@ -56,7 +59,6 @@ class PDF(FPDF):
 
 def create_pdf_with_graph(country, report_text, prediction_year, fig_path, username):
     pdf = PDF()
-    # Cover page
     pdf.add_page()
     pdf.set_font("Arial", 'B', 24)
     pdf.cell(0, 80, "Fusion Energy Global Report", ln=True, align='C')
@@ -66,7 +68,6 @@ def create_pdf_with_graph(country, report_text, prediction_year, fig_path, usern
     pdf.set_font("Arial", size=12)
     pdf.cell(0, 10, "Country Focus: " + country, ln=True, align='C')
 
-    # Content page
     pdf.add_page()
     pdf.set_font("Arial", 'B', 16)
     pdf.cell(0, 10, f"Fusion Energy Report - {country}", ln=True, align='C')
@@ -87,16 +88,12 @@ def create_pdf_with_graph(country, report_text, prediction_year, fig_path, usern
     pdf.ln(5)
     return pdf
 
-# Country selection dropdown
 country = st.selectbox("Select a Country to Explore", data['Country'].unique())
 
-# Filter data based on selection
 data_filtered = data[data['Country'] == country].iloc[0]
 
-# Intro section with energy news links
 st.title("Fusion Energy Global Dashboard")
 
-# Plasma duration visualization
 st.subheader("Plasma Duration Comparison")
 fig, ax = plt.subplots()
 plot_data = data.dropna(subset=['Plasma Duration (seconds)'])
@@ -105,17 +102,14 @@ ax.set_ylabel("Duration (seconds)")
 ax.set_title("Plasma Sustained Time by Country")
 st.pyplot(fig)
 
-# Save graph temporarily
 with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmpfile:
     fig.savefig(tmpfile.name)
     temp_graph_path = tmpfile.name
 
-# Machine learning commercialization prediction
 st.subheader("Commercialization Prediction")
 predicted_year = predict_year(data_filtered)
 st.success(f"Predicted Commercialization Year: {predicted_year}")
 
-# Investment strategy recommendation
 st.subheader("Investment Strategy Recommendation")
 plasma_temp = data_filtered['Plasma Temperature (°C)']
 if pd.notnull(plasma_temp) and plasma_temp > 100_000_000:
@@ -123,7 +117,6 @@ if pd.notnull(plasma_temp) and plasma_temp > 100_000_000:
 else:
     st.info("Medium Potential: Monitor plasma duration and stability progress.")
 
-# Downloadable PDF report with graph and user name input
 st.subheader("Download Your Report")
 username = st.text_input("Enter your name for the report:", "Juhee")
 if st.button("Generate PDF Report"):
@@ -133,11 +126,9 @@ if st.button("Generate PDF Report"):
     with open(pdf_output, "rb") as f:
         st.download_button("Click to download your report", f, file_name=pdf_output)
 
-# Clean up temp graph file
 if os.path.exists(temp_graph_path):
     os.remove(temp_graph_path)
 
-# Custom report options (future features)
 st.subheader("🌐 Custom Report Options (Coming Soon)")
 st.checkbox("Include Plasma Duration Graph")
 st.checkbox("Include Commercialization Prediction")
