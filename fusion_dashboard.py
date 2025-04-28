@@ -85,11 +85,11 @@ def create_pdf_with_graph(country, report_text, prediction_year, fig_path, usern
 
 
 # Intro section with energy news links
-st.title("\ud83c\udf0c Fusion Energy Global Dashboard")
+st.title("Fusion Energy Global Dashboard")
 ...
 
 # Plasma duration visualization
-st.subheader("\ud83d\udd22 Plasma Duration Comparison")
+st.subheader("Plasma Duration Comparison")
 fig, ax = plt.subplots()
 plot_data = data.dropna(subset=['Plasma Duration (seconds)'])
 ax.bar(plot_data['Country'], plot_data['Plasma Duration (seconds)'])
@@ -103,16 +103,16 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmpfile:
     temp_graph_path = tmpfile.name
 
 # Machine learning commercialization prediction
-st.subheader("\ud83d\udd2c Commercialization Prediction")
+st.subheader("Commercialization Prediction")
 predicted_year = predict_year(data_filtered)
 st.success(f"Predicted Commercialization Year: {predicted_year}")
 
 # Investment strategy recommendation
-st.subheader("\ud83d\udcc5 Investment Strategy Recommendation")
+st.subheader("Investment Strategy Recommendation")
 ...
 
 # Downloadable PDF report with graph and user name input
-st.subheader("\ud83d\udcc4 Download Your Report")
+st.subheader("Download Your Report")
 username = st.text_input("Enter your name for the report:", "Juhee")
 if st.button("Generate PDF Report"):
     pdf = create_pdf_with_graph(country, reports[country], predicted_year, temp_graph_path, username)
