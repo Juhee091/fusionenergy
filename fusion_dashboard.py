@@ -7,6 +7,9 @@ from fpdf import FPDF
 import tempfile
 import os
 
+# Set Streamlit page configuration
+st.set_page_config(page_title="Fusion Energy Dashboard", page_icon="\u2600\ufe0f", layout="wide")
+
 # Load CSV data
 @st.cache_data
 def load_data():
@@ -79,8 +82,7 @@ def create_pdf_with_graph(country, report_text, prediction_year, fig_path, usern
     pdf.ln(5)
     return pdf
 
-# Set Streamlit page configuration
-st.set_page_config(page_title="Fusion Energy Dashboard", page_icon="\u2600\ufe0f", layout="wide")
+
 
 # Intro section with energy news links
 st.title("\ud83c\udf0c Fusion Energy Global Dashboard")
