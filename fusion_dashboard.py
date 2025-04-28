@@ -8,7 +8,7 @@ import tempfile
 import os
 
 # Set Streamlit page configuration
-st.set_page_config(page_title="Fusion Energy Dashboard", page_icon="\u2600\ufe0f", layout="wide")
+st.set_page_config(page_title="Fusion Energy Dashboard", page_icon="☀️", layout="wide")
 
 # Load CSV data
 @st.cache_data
@@ -20,7 +20,12 @@ def load_data():
 data = load_data()
 
 # Country-specific report texts
-reports = { ... }
+reports = {
+    "USA": "USA Fusion Project Overview: Achieved ignition multiple times with significant energy gain.",
+    "France": "France Fusion Project Overview: Set world record for plasma duration.",
+    "Germany": "Germany Fusion Project Overview: Developing next-gen stellarator concept.",
+    "China": "China Fusion Project Overview: Record-breaking plasma temperature and duration."
+}
 
 # Prepare machine learning model
 ml_data = data[['Plasma Duration (seconds)', 'Plasma Temperature (°C)', 'Energy Gain']].fillna(0)
@@ -82,11 +87,14 @@ def create_pdf_with_graph(country, report_text, prediction_year, fig_path, usern
     pdf.ln(5)
     return pdf
 
+# Country selection dropdown
+country = st.selectbox("Select a Country to Explore", data['Country'].unique())
 
+# Filter data based on selection
+data_filtered = data[data['Country'] == country].iloc[0]
 
 # Intro section with energy news links
 st.title("Fusion Energy Global Dashboard")
-...
 
 # Plasma duration visualization
 st.subheader("Plasma Duration Comparison")
@@ -109,7 +117,10 @@ st.success(f"Predicted Commercialization Year: {predicted_year}")
 
 # Investment strategy recommendation
 st.subheader("Investment Strategy Recommendation")
-...
+if data_filtered['Plasma Temperature (°C)'] > 100_000_000:
+    st.info("High Potential: Focus on high-temperature superconducting tokamak technologies.")
+else:
+    st.info("Medium Potential: Monitor plasma duration and stability progress.")
 
 # Downloadable PDF report with graph and user name input
 st.subheader("Download Your Report")
@@ -126,7 +137,7 @@ if os.path.exists(temp_graph_path):
     os.remove(temp_graph_path)
 
 # Custom report options (future features)
-st.subheader("\ud83c\udf10 Custom Report Options (Coming Soon)")
+st.subheader("🌐 Custom Report Options (Coming Soon)")
 st.checkbox("Include Plasma Duration Graph")
 st.checkbox("Include Commercialization Prediction")
 st.checkbox("Include Investment Strategy")
