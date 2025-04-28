@@ -1,0 +1,5 @@
+Country,Project Name,Method,Plasma Duration (seconds),Plasma Temperature (°C),Energy Gain,Expected Output,Notes
+USA,NIF,Inertial Confinement Fusion (ICF),0.001,1000000000.0,2.44,,Achieved ignition in 2025
+France,WEST,Tokamak (Magnetic Confinement),1337.0,50000000.0,,,Broke plasma duration record
+Germany,Proxima Fusion (Stellaris),Stellarator (QI-HTS),,,,1 GW (planned),Commercial plant design released
+China,EAST,Tokamak (Superconducting),1066.0,108000000.0,,,Set new plasma temperature record
